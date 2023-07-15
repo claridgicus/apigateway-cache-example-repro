@@ -20,6 +20,7 @@ provider:
 custom:
   apiGatewayCaching:
     enabled: true
+    basePath: /dev
 package:
   individually: true
 
