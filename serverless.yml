@@ -1,0 +1,37 @@
+service: serverless-nest-example
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-api-gateway-caching
+  # - serverless-plugin-warmup
+
+# custom:
+#   # Enable warmup on all functions (only for production and staging)
+#   warmup:
+#       - production
+#       - staging
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+custom:
+  apiGatewayCaching:
+    enabled: true
+package:
+  individually: true
+
+functions:
+  main:
+    handler: src/main.handler
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+          caching:
+            enabled: true # it must be specifically enabled
+            ttlInSeconds: 5 # if not set, inherited from global settings
+            cacheKeyParameters:
+              - name: request.path.proxy
